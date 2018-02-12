@@ -14,7 +14,7 @@ def get_posts():
   db.close()
   data = []
   for content, time in table:
-      content = bleach.clean(content)
+      content = bleach.linkify(bleach.clean(content))
       data.append((content, time));
   return data
 
