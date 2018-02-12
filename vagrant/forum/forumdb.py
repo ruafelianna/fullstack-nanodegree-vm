@@ -1,6 +1,7 @@
 # "Database code" for the DB Forum.
 
 import psycopg2 as pg
+import bleach
 
 DBNAME = "forum"
 
@@ -9,8 +10,12 @@ def get_posts():
   db = pg.connect("dbname=" + DBNAME)
   c = db.cursor()
   c.execute("select content, time from posts order by time desc;")
-  data = c.fetchall()
+  table = c.fetchall()
   db.close()
+  data = []
+  for content, time in table:
+      content = bleach.clean(content)
+      data.append((content, time));
   return data
 
 def add_post(content):
